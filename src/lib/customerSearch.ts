@@ -129,7 +129,7 @@ async function searchNominatim(query: string, countryCode?: string, limit: numbe
 }
 
 // 通过 Overpass API (OpenStreetMap) 搜索商业设施
-async function searchOverpass(query: string, countryCode?: string, limit: number = 40): Promise<SearchResult[]> {
+async function searchOverpass(_query: string, countryCode?: string, limit: number = 40): Promise<SearchResult[]> {
   try {
     // 构建Overpass QL查询
     let areaFilter = ''

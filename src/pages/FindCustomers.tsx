@@ -25,7 +25,6 @@ import {
   LinkedinOutlined,
   EnvironmentOutlined,
   DatabaseOutlined,
-  StarOutlined,
   PlusOutlined,
   DownloadOutlined,
   MailOutlined,
