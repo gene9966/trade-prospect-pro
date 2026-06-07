@@ -35,9 +35,75 @@ function Auth() {
       message.error('注册失败：' + error.message)
       return
     }
-    message.success('注册成功！请检查邮箱验证链接')
-    setActiveTab('login')
+    message.success('注册成功！正在自动登录...')
+    // 注册成功后自动登录
+    const { error: loginError } = await authApi.signIn(values.email, values.password)
+    if (!loginError) {
+      navigate('/')
+    } else {
+      message.info('请使用注册的账号登录')
+      setActiveTab('login')
+    }
   }
+
+  const items = [
+    {
+      key: 'login',
+      label: '登录',
+      children: (
+        <Form onFinish={handleLogin} layout="vertical">
+          <Form.Item
+            name="email"
+            rules={[{ required: true, message: '请输入邮箱' }, { type: 'email', message: '邮箱格式不正确' }]}
+          >
+            <Input prefix={<MailOutlined />} placeholder="邮箱" size="large" />
+          </Form.Item>
+          <Form.Item
+            name="password"
+            rules={[{ required: true, message: '请输入密码' }, { min: 6, message: '密码至少6位' }]}
+          >
+            <Input.Password prefix={<LockOutlined />} placeholder="密码" size="large" />
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit" loading={loading} size="large" block>
+              登 录
+            </Button>
+          </Form.Item>
+        </Form>
+      ),
+    },
+    {
+      key: 'register',
+      label: '注册',
+      children: (
+        <Form onFinish={handleRegister} layout="vertical">
+          <Form.Item
+            name="email"
+            rules={[{ required: true, message: '请输入邮箱' }, { type: 'email', message: '邮箱格式不正确' }]}
+          >
+            <Input prefix={<MailOutlined />} placeholder="邮箱" size="large" />
+          </Form.Item>
+          <Form.Item
+            name="password"
+            rules={[{ required: true, message: '请输入密码' }, { min: 6, message: '密码至少6位' }]}
+          >
+            <Input.Password prefix={<LockOutlined />} placeholder="密码" size="large" />
+          </Form.Item>
+          <Form.Item
+            name="confirmPassword"
+            rules={[{ required: true, message: '请确认密码' }]}
+          >
+            <Input.Password prefix={<LockOutlined />} placeholder="确认密码" size="large" />
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit" loading={loading} size="large" block>
+              注 册
+            </Button>
+          </Form.Item>
+        </Form>
+      ),
+    },
+  ]
 
   return (
     <div
@@ -57,57 +123,7 @@ function Auth() {
           <Text type="secondary">外贸客户开发系统</Text>
         </div>
 
-        <Tabs activeKey={activeTab} onChange={setActiveTab} centered>
-          <Tabs.TabPane tab="登录" key="login">
-            <Form onFinish={handleLogin} layout="vertical">
-              <Form.Item
-                name="email"
-                rules={[{ required: true, message: '请输入邮箱' }, { type: 'email', message: '邮箱格式不正确' }]}
-              >
-                <Input prefix={<MailOutlined />} placeholder="邮箱" size="large" />
-              </Form.Item>
-              <Form.Item
-                name="password"
-                rules={[{ required: true, message: '请输入密码' }, { min: 6, message: '密码至少6位' }]}
-              >
-                <Input.Password prefix={<LockOutlined />} placeholder="密码" size="large" />
-              </Form.Item>
-              <Form.Item>
-                <Button type="primary" htmlType="submit" loading={loading} size="large" block>
-                  登录
-                </Button>
-              </Form.Item>
-            </Form>
-          </Tabs.TabPane>
-
-          <Tabs.TabPane tab="注册" key="register">
-            <Form onFinish={handleRegister} layout="vertical">
-              <Form.Item
-                name="email"
-                rules={[{ required: true, message: '请输入邮箱' }, { type: 'email', message: '邮箱格式不正确' }]}
-              >
-                <Input prefix={<MailOutlined />} placeholder="邮箱" size="large" />
-              </Form.Item>
-              <Form.Item
-                name="password"
-                rules={[{ required: true, message: '请输入密码' }, { min: 6, message: '密码至少6位' }]}
-              >
-                <Input.Password prefix={<LockOutlined />} placeholder="密码" size="large" />
-              </Form.Item>
-              <Form.Item
-                name="confirmPassword"
-                rules={[{ required: true, message: '请确认密码' }]}
-              >
-                <Input.Password prefix={<LockOutlined />} placeholder="确认密码" size="large" />
-              </Form.Item>
-              <Form.Item>
-                <Button type="primary" htmlType="submit" loading={loading} size="large" block>
-                  注册
-                </Button>
-              </Form.Item>
-            </Form>
-          </Tabs.TabPane>
-        </Tabs>
+        <Tabs activeKey={activeTab} onChange={setActiveTab} centered items={items} />
 
         <Text type="secondary" style={{ display: 'block', textAlign: 'center', fontSize: 12 }}>
           免费云端版 · 数据安全存储
